@@ -2,7 +2,10 @@ package com.edudev.msworker.resources;
 
 import com.edudev.msworker.entities.Worker;
 import com.edudev.msworker.repositories.WorkerRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,13 +13,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/workers")
 public class WorkerResource {
 
     private final WorkerRepository repository;
+
+    @Autowired
+    private Environment env;
+
+    private static final Logger logger = LoggerFactory.getLogger(WorkerResource.class);
 
     @Autowired
     public WorkerResource(final WorkerRepository repository) {
@@ -33,7 +40,9 @@ public class WorkerResource {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Worker> findById(@PathVariable UUID id){
+    public ResponseEntity<Worker> findById(@PathVariable Long id){
+
+        logger.info("PORT = " + env.getProperty("local.server.port"));
 
         final var result = repository.findById(id).get();
 
