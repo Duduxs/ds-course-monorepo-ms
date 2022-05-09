@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public record Worker(
-        UUID id,
+        Long id,
         String name,
         BigDecimal dailyIncome
 ) {  }

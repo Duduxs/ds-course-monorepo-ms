@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/payments")
 public class PaymentResource {
@@ -19,7 +17,7 @@ public class PaymentResource {
     private PaymentService service;
 
     @GetMapping("/{workerId}/days/{days}")
-    public ResponseEntity<Payment> getPayment(@PathVariable UUID workerId, @PathVariable int days) {
+    public ResponseEntity<Payment> getPayment(@PathVariable Long workerId, @PathVariable int days) {
         Payment payment = service.getPayment(workerId, days);
 
         return ResponseEntity.ok(payment);
