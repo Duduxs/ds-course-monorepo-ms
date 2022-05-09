@@ -1,16 +1,17 @@
 package com.edudev.mspayroll.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class Payment implements Serializable {
 
     private String name;
-    private Double dailyIncome;
+    private BigDecimal dailyIncome;
     private Integer days;
 
     public Payment(){}
 
-    public Payment(String name, Double dailyIncome, Integer days) {
+    public Payment(String name, BigDecimal dailyIncome, Integer days) {
         this.name = name;
         this.dailyIncome = dailyIncome;
         this.days = days;
@@ -24,11 +25,11 @@ public class Payment implements Serializable {
         this.name = name;
     }
 
-    public Double getDailyIncome() {
+    public BigDecimal getDailyIncome() {
         return dailyIncome;
     }
 
-    public void setDailyIncome(Double dailyIncome) {
+    public void setDailyIncome(BigDecimal dailyIncome) {
         this.dailyIncome = dailyIncome;
     }
 
@@ -40,7 +41,7 @@ public class Payment implements Serializable {
         this.days = days;
     }
 
-    public double getTotal() {
-        return days * dailyIncome;
+    public BigDecimal getTotal() {
+        return dailyIncome.multiply(BigDecimal.valueOf(days));
     }
 }

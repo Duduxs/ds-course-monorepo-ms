@@ -5,4 +5,5 @@ spring:
   application:
     name: ms-payroll
 
-
+ms-worker:
+  host: http://localhost:8081
