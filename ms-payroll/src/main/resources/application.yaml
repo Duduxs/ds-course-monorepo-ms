@@ -9,3 +9,22 @@ eureka:
 spring:
   application:
     name: ms-payroll
+
+feign:
+  circuitbreaker:
+    enabled: true
+
+resilience4j:
+  timelimiter:
+    configs:
+      default:
+        timeout-duration: 5s
+  circuitbreaker:
+    instances:
+      circuitbreakerInstance:
+        slidingWindowSize: 30
+        permittedNumberOfCallsInHalfOpenState: 2
+        slidingWindowType: TIME_BASED
+        minimumNumberOfCalls: 2
+        waitDurationInOpenState: 45s
+        failureRateThreshold: 80
