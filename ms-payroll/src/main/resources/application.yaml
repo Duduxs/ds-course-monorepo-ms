@@ -1,5 +1,7 @@
 server:
   port: 8101
+  servlet:
+    context-path: '/ms-payroll/'
 
 eureka:
   client:

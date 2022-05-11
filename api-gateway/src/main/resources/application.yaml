@@ -1,0 +1,22 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: ms-api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: ms-worker
+          uri: lb://ms-worker
+          predicates:
+            - Path=/ms-worker/**
+        - id: ms-payroll
+          uri: lb://ms-payroll
+          predicates:
+            - Path=/ms-payroll/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
