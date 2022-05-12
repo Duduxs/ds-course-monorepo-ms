@@ -7,11 +7,11 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: ms-worker
+        - id: gateway-ms-worker
           uri: lb://ms-worker
           predicates:
             - Path=/ms-worker/**
-        - id: ms-payroll
+        - id: gateway-ms-payroll
           uri: lb://ms-payroll
           predicates:
             - Path=/ms-payroll/**
