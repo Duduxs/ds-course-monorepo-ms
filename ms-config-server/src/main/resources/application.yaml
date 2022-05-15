@@ -5,6 +5,8 @@ spring:
     config:
       server:
         git:
+          username: ${GITHUB_USER}
+          password: ${GITHUB_PASS}
           default-label: main
           uri: https://github.com/Duduxs/ds-course-config-ms
 
