@@ -28,4 +28,10 @@ spring:
   jpa:
     open-in-view: false
 
-
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - refresh
+          - health
