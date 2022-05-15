@@ -5,6 +5,7 @@ import com.edudev.msworker.repositories.WorkerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,11 +24,20 @@ public class WorkerResource {
     @Autowired
     private Environment env;
 
+    @Value("${test.config}")
+    private String testConfig;
+
     private static final Logger logger = LoggerFactory.getLogger(WorkerResource.class);
 
     @Autowired
     public WorkerResource(final WorkerRepository repository) {
         this.repository = repository;
+    }
+
+    @GetMapping("/configs")
+    public ResponseEntity<Void> findAllConfigs(){
+        logger.info("CONFIG = " + testConfig);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping

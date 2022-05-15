@@ -13,10 +13,14 @@ eureka:
 spring:
   application:
     name: ms-worker
+  profiles:
+    active: test
   datasource:
     url: jdbc:h2:mem:testdb
     username: sa
     password:
+  config:
+    import: 'configserver:'
   h2:
     console:
       enabled: true
