@@ -15,6 +15,10 @@ spring:
           uri: lb://ms-payroll
           predicates:
             - Path=/ms-payroll/**
+        - id: gateway-ms-user
+          uri: lb://ms-user
+          predicates:
+            - Path=/ms-user/**
 
 eureka:
   client:
