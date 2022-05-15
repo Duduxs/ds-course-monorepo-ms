@@ -1,1 +1,17 @@
+spring:
+  application:
+    name: ms-config-server
+  cloud:
+    config:
+      server:
+        git:
+          default-label: main
+          uri: https://github.com/Duduxs/ds-course-config-ms
 
+server:
+  port: 8888
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
