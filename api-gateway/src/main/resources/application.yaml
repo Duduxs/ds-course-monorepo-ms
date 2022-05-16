@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: ms-api-gateway
+  config:
+    import: 'configserver:'
   cloud:
     gateway:
       routes:
@@ -23,7 +25,6 @@ spring:
           uri: lb://ms-oauth
           predicates:
             - Path=/ms-oauth/**
-
 eureka:
   client:
     service-url:

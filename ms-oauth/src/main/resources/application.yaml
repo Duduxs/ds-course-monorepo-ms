@@ -13,3 +13,5 @@ eureka:
 spring:
   application:
     name: ms-oauth
+  config:
+    import: 'configserver:'
