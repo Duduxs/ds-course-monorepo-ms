@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Component
 public class AuthFilter implements GlobalFilter {
@@ -27,23 +28,30 @@ public class AuthFilter implements GlobalFilter {
     private static final Collection<String> PUBLIC = List.of(
             "/auth/login"
     );
-
-    // TODO fazer autorização mais robusta com esses dois camaradas também.
+    
     private static final Collection<String> OPERATOR = List.of(
-            "/ms-worker/**"
+            "/ms-worker/"
     );
 
     private static final Collection<String> ADMIN = List.of(
-            "/ms-payroll/**",
-            "/ms-user/**",
-            "/actuator/**",
-            "/ms-worker/actuator/**",
-            "/ms-oauth/actuator/**"
+            "/ms-payroll/",
+            "/ms-user/",
+            "/actuator/",
+            "/ms-worker/actuator/",
+            "/ms-oauth/actuator/"
     );
 
-    private final Predicate<ServerHttpRequest> isSecured = request -> PUBLIC
+    private final Predicate<ServerHttpRequest> isPublicURI = request -> PUBLIC
             .stream()
             .noneMatch(uri -> request.getURI().getPath().contains(uri));
+
+    private final Predicate<ServerHttpRequest> isOperatorURI = request -> OPERATOR
+            .stream()
+            .anyMatch(uri -> request.getURI().getPath().contains(uri));
+
+    private final Predicate<ServerHttpRequest> isAdminURI = request -> ADMIN
+            .stream()
+            .anyMatch(uri -> request.getURI().getPath().contains(uri));
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -51,7 +59,7 @@ public class AuthFilter implements GlobalFilter {
 
         logger.info("Gateway filter executed!");
 
-        if (isSecured.test(request)) {
+        if (isPublicURI.test(request)) {
 
             if (!hasAuthorizationHeader(request))
                 onError("Authorization Header is missing");
@@ -61,12 +69,13 @@ public class AuthFilter implements GlobalFilter {
             if (!provider.validateJwt(token))
                 onError("Invalid JWT");
 
-            String[] userRoles = provider.getRolesJwt(token).split(",");
+            Collection<String> userRoles = Arrays.stream(provider.getRolesJwt(token).split(",")).collect(Collectors.toList());
 
-            if (Arrays.stream(userRoles).noneMatch(s -> s.equals("ROLE_ADMIN"))) {
-                onError("User not authorized to access the resource");
+            if (isOperatorURI.test(request) && !userRoles.contains("ROLE_OPERATOR")) {
+                onError("User not authorized to access the resource. Only available to operators");
+            } else if (isAdminURI.test(request) && !userRoles.contains("ROLE_ADMIN")) {
+                onError("User not authorized to access the resource. Only available to admins");
             }
-
         }
 
         return chain.filter(exchange);
