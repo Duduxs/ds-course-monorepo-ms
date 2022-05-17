@@ -8,6 +8,17 @@ spring:
     import: 'configserver:'
   cloud:
     gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedHeaders: "Authorization, Content-Type"
+            allowedMethods:
+              - POST
+              - GET
+              - PUT
+              - DELETE
+              - PATCH
       routes:
         - id: gateway-ms-worker
           uri: lb://ms-worker
