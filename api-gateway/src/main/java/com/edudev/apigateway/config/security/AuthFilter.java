@@ -29,13 +29,17 @@ public class AuthFilter implements GlobalFilter {
     );
 
     // TODO fazer autorização mais robusta com esses dois camaradas também.
+    // TODO JOGAR O ACTUATOR AQ E A ANNOTATION @REFRESHSCOPE NO JWTPROVIDER.
     private static final Collection<String> OPERATOR = List.of(
-            "/hr-worker/**"
+            "/ms-worker/**"
     );
 
     private static final Collection<String> ADMIN = List.of(
-            "/hr-payroll/**",
-            "/hr-user/**"
+            "/ms-payroll/**",
+            "/ms-user/**",
+            "/actuator/**",
+            "/ms-worker/actuator/**",
+            "/ms-oauth/actuator/**"
     );
 
     private final Predicate<ServerHttpRequest> isSecured = request -> PUBLIC
