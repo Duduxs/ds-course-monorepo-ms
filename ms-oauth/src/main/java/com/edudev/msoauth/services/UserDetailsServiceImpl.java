@@ -25,6 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         if(user == null) {
             logger.error("Email not found: " + username);
+            throw new UsernameNotFoundException("Email not found");
         }
 
         logger.info("Email found: " + username);
