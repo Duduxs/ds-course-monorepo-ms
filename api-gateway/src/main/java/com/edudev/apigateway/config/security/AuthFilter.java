@@ -28,7 +28,7 @@ public class AuthFilter implements GlobalFilter {
     private static final Collection<String> PUBLIC = List.of(
             "/auth/login"
     );
-    
+
     private static final Collection<String> OPERATOR = List.of(
             "/ms-worker/"
     );
