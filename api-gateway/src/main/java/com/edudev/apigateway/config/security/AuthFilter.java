@@ -24,11 +24,21 @@ public class AuthFilter implements GlobalFilter {
     @Autowired
     private JwtProvider provider;
 
-    private static final Collection<String> AUTH_WHITELIST = List.of(
+    private static final Collection<String> PUBLIC = List.of(
             "/auth/login"
     );
 
-    private final Predicate<ServerHttpRequest> isSecured = request -> AUTH_WHITELIST
+    // TODO fazer autorização mais robusta com esses dois camaradas também.
+    private static final Collection<String> OPERATOR = List.of(
+            "/hr-worker/**"
+    );
+
+    private static final Collection<String> ADMIN = List.of(
+            "/hr-payroll/**",
+            "/hr-user/**"
+    );
+
+    private final Predicate<ServerHttpRequest> isSecured = request -> PUBLIC
             .stream()
             .noneMatch(uri -> request.getURI().getPath().contains(uri));
 
