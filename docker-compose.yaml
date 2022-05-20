@@ -12,8 +12,8 @@ services:
       context: ./ms-config-server
       dockerfile: ms-config-server.Dockerfile
       args:
-        GITHUB_USER: YOUR_GITHUB_USERNAME_HERE
-        GITHUB_PASS: YOUR_GITHUB_PASSWORD_HERE
+        GITHUB_USER: YOUR_GITHUB_USER_HERE
+        GITHUB_PASS: YOUR_GITHUB_TOKEN_HERE
         SERVICE_REGISTRY_URL: http://ds-course-ms-eureka-server:8761/eureka
     networks:
       - ds-course-ms-net
