@@ -1,0 +1,168 @@
+version: '3.8'
+
+services:
+  ds-course-ms-config-server:
+    image: ds-course-ms-config-server-image
+    container_name: ds-course-ms-config-server
+    expose:
+      - 8888
+    ports:
+      - "8888:8888"
+    build:
+      context: ./ms-config-server
+      dockerfile: ms-config-server.Dockerfile
+      args:
+        GITHUB_USER: Duduxs
+        GITHUB_PASS: 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
+        SERVICE_REGISTRY_URL: http://ds-course-ms-eureka-server:8761/eureka
+    networks:
+      - ds-course-ms-net
+    depends_on:
+      - ds-course-ms-eureka-server
+  ds-course-ms-eureka-server:
+    image: ds-course-ms-eureka-server-image
+    container_name: ds-course-ms-eureka-server
+    expose:
+      - 8761
+    ports:
+      - "8761:8761"
+    build:
+      context: ./ms-eureka-server
+      dockerfile: ms-eureka-server.Dockerfile
+    networks:
+      - ds-course-ms-net
+  ds-course-ms-worker:
+    image: ds-course-ms-worker-image
+    container_name: ds-course-ms-worker
+    expose:
+      - 8762
+    ports:
+      - "8762:8762"
+    build:
+      context: ./ms-worker
+      dockerfile: ms-worker.Dockerfile
+      args:
+        ENV: prod
+        CONFIG_SERVER_URL: configserver:http://ds-course-ms-config-server:8888
+    networks:
+      - ds-course-ms-net
+    depends_on:
+      - ds-course-ms-worker-db
+      - ds-course-ms-eureka-server
+      - ds-course-ms-config-server
+  ds-course-ms-user:
+    image: ds-course-ms-user-image
+    container_name: ds-course-ms-user
+    expose:
+      - 8763
+    ports:
+      - "8763:8763"
+    build:
+      context: ./ms-user
+      dockerfile: ms-user.Dockerfile
+      args:
+        ENV: prod
+        CONFIG_SERVER_URL: configserver:http://ds-course-ms-config-server:8888
+    networks:
+      - ds-course-ms-net
+    depends_on:
+      - ds-course-ms-user-db
+      - ds-course-ms-eureka-server
+      - ds-course-ms-config-server
+  ds-course-ms-payroll:
+    image: ds-course-ms-payroll-image
+    container_name: ds-course-ms-payroll
+    expose:
+      - 8764
+    ports:
+      - "8764:8764"
+    build:
+      context: ./ms-payroll
+      dockerfile: ms-payroll.Dockerfile
+      args:
+        ENV: prod
+        CONFIG_SERVER_URL: configserver:http://ds-course-ms-config-server:8888
+    networks:
+      - ds-course-ms-net
+    depends_on:
+      - ds-course-ms-eureka-server
+      - ds-course-ms-config-server
+  ds-course-ms-oauth:
+    image: ds-course-ms-oauth-image
+    container_name: ds-course-ms-oauth
+    expose:
+      - 8765
+    ports:
+      - "8765:8765"
+    build:
+      context: ./ms-oauth
+      dockerfile: ms-oauth.Dockerfile
+      args:
+        ENV: prod
+        CONFIG_SERVER_URL: configserver:http://ds-course-ms-config-server:8888
+    networks:
+      - ds-course-ms-net
+    depends_on:
+      - ds-course-ms-eureka-server
+      - ds-course-ms-config-server
+  ds-course-ms-api-gateway:
+    image: ds-course-ms-api-gateway-image
+    container_name: ds-course-ms-api-gateway
+    expose:
+      - 8776
+    ports:
+      - "8776:8080"
+    build:
+      context: ./api-gateway
+      dockerfile: ms-api-gateway.Dockerfile
+      args:
+        ENV: prod
+        SERVICE_REGISTRY_URL: http://ds-course-ms-eureka-server:8761/eureka
+        CONFIG_SERVER_URL: configserver:http://ds-course-ms-config-server:8888
+    networks:
+      - ds-course-ms-net
+    depends_on:
+      - ds-course-ms-eureka-server
+      - ds-course-ms-config-server
+  ds-course-ms-worker-db:
+    image: postgres
+    container_name: ds-course-ms-worker-db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 1234567
+      POSTGRES_DB: db-ms-worker
+    command:
+      - -p 5411
+    ports:
+      - "5411:5411"
+    expose:
+      - 5411
+    networks:
+      - ds-course-ms-net
+    volumes:
+      - ds-course-ms-worker-volume:/var/lib/postgresql
+  ds-course-ms-user-db:
+    image: postgres
+    container_name: ds-course-ms-user-db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 1234567
+      POSTGRES_DB: db-ms-user
+    command:
+      - -p 5412
+    ports:
+      - "5412:5412"
+    expose:
+      - 5412
+    networks:
+      - ds-course-ms-net
+    volumes:
+      - ds-course-ms-user-volume:/var/lib/postgresql
+
+networks:
+  ds-course-ms-net:
+    driver: bridge
+
+volumes:
+  ds-course-ms-worker-volume:
+  ds-course-ms-user-volume:

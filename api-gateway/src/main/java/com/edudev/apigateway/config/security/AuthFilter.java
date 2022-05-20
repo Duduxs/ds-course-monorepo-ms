@@ -26,7 +26,8 @@ public class AuthFilter implements GlobalFilter {
     private JwtProvider provider;
 
     private static final Collection<String> PUBLIC = List.of(
-            "/auth/login"
+            "/auth/login",
+            "/actuator/"
     );
 
     private static final Collection<String> OPERATOR = List.of(
@@ -35,10 +36,7 @@ public class AuthFilter implements GlobalFilter {
 
     private static final Collection<String> ADMIN = List.of(
             "/ms-payroll/",
-            "/ms-user/",
-            "/actuator/",
-            "/ms-worker/actuator/",
-            "/ms-oauth/actuator/"
+            "/ms-user/"
     );
 
     private final Predicate<ServerHttpRequest> isPublicURI = request -> PUBLIC

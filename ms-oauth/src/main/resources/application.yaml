@@ -3,15 +3,10 @@ server:
   servlet:
     context-path: '/ms-oauth/'
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
-  instance:
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
-
 spring:
   application:
     name: ms-oauth
+  profiles:
+    active: ${ENV:dev}
   config:
-    import: 'configserver:'
+    import: ${CONFIG_SERVER_URL:configserver:}
