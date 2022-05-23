@@ -12,8 +12,8 @@ services:
       context: ./ms-config-server
       dockerfile: ms-config-server.Dockerfile
       args:
-        GITHUB_USER: YOUR_GITHUB_USER_HERE
-        GITHUB_PASS: YOUR_GITHUB_TOKEN_HERE
+        GITHUB_USER: YOUR_GITHUB_USER
+        GITHUB_PASS: YOUR_GITHUB_PASS
         SERVICE_REGISTRY_URL: http://ds-course-ms-eureka-server:8761/eureka
     networks:
       - ds-course-ms-net
@@ -33,11 +33,10 @@ services:
       - ds-course-ms-net
   ds-course-ms-worker:
     image: ds-course-ms-worker-image
-    container_name: ds-course-ms-worker
     expose:
       - 8762
     ports:
-      - "8762:8762"
+      - "8762"
     build:
       context: ./ms-worker
       dockerfile: ms-worker.Dockerfile
@@ -52,11 +51,10 @@ services:
       - ds-course-ms-config-server
   ds-course-ms-user:
     image: ds-course-ms-user-image
-    container_name: ds-course-ms-user
     expose:
       - 8763
     ports:
-      - "8763:8763"
+      - "8763"
     build:
       context: ./ms-user
       dockerfile: ms-user.Dockerfile

@@ -8,20 +8,12 @@ sleep 3
 
 echo $'\n'"Removing project containers"$'\n'
 
-docker container rm -f  ds-course-ms-worker
-docker container rm -f  ds-course-ms-user
-docker container rm -f  ds-course-ms-api-gateway
-docker container rm -f  ds-course-ms-oauth
-docker container rm -f  ds-course-ms-config-server
-docker container rm -f  ds-course-ms-payroll
-docker container rm -f  ds-course-ms-eureka-server
-docker container rm -f  ds-course-ms-worker-db
-docker container rm -f  ds-course-ms-user-db
+docker ps -a -q -f name=ds-course-ms | xargs docker rm -f
 
 echo $'\n'"Now project images"$'\n'
 
 # shellcheck disable=SC2046
-docker rmi -f $(docker images -f reference='ds-course-ms*')
+docker images -a -q -f reference='ds-course-ms**' | xargs docker rmi -f
 
 echo $'\n'"Finally ds-course-ms-net network"$'\n'
 # shellcheck disable=SC2046
@@ -71,8 +63,8 @@ echo $'\n'"All jars generated"$'\n'
 # shellcheck disable=SC2028
 echo $'\n'"Executing service-registry and config-server containers"$'\n'
 
-docker-compose --project-directory ../ up -d ds-course-ms-eureka-server
-docker-compose --project-directory ../ up -d ds-course-ms-config-server
+docker-compose up -d ds-course-ms-eureka-server
+docker-compose up -d ds-course-ms-config-server
 
 echo $'\n'"Waiting to ms-config-server and ms-eureka-server init"$'\n'
 
@@ -84,7 +76,13 @@ done
 
 echo $'\n'"Now starting others containers"$'\n'
 
-docker-compose --project-directory ../ up -d
+docker-compose up -d ds-course-ms-worker-db
+docker-compose up -d ds-course-ms-user-db
+docker-compose up -d ds-course-ms-api-gateway
+docker-compose up -d --scale ds-course-ms-worker=3 ds-course-ms-worker
+docker-compose up -d --scale ds-course-ms-user=2 ds-course-ms-user
+docker-compose up -d ds-course-ms-payroll
+docker-compose up -d ds-course-ms-oauth
 
 # shellcheck disable=SC2028
 echo $'\n'"Now exec 'docker ps' command ;)"$'\n'
