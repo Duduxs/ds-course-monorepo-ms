@@ -23,16 +23,16 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build Eureka Server with Maven
-      run: mvn -B package --file ms-eureka-server/pom.xml
+      run: mvn -B package --file ms-eureka-server/pom.xml 
     - name: Build Config Server with Maven
       run: mvn -B package --file ms-config-server/pom.xml
     - name: Build Api Gateway with Maven
-      run: mvn -B package --file api-gateway/pom.xml
+      run: mvn -B package --file api-gateway/pom.xml -DskipTests
     - name: Build Oauth with Maven
-      run: mvn -B package --file ms-oauth/pom.xml
+      run: mvn -B package --file ms-oauth/pom.xml -DskipTests
     - name: Build Payroll with Maven
-      run: mvn -B package --file ms-payroll/pom.xml
+      run: mvn -B package --file ms-payroll/pom.xml -DskipTests
     - name: Build User with Maven
-      run: mvn -B package --file ms-user/pom.xml
+      run: mvn -B package --file ms-user/pom.xml -DskipTests
     - name: Build Worker with Maven
-      run: mvn -B package --file ms-worker/pom.xml
+      run: mvn -B package --file ms-worker/pom.xml -DskipTests
